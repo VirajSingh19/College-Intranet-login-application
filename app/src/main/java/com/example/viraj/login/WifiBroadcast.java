@@ -15,6 +15,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import im.delight.android.webview.AdvancedWebView;
 
 /**
@@ -22,14 +29,18 @@ import im.delight.android.webview.AdvancedWebView;
  */
 
 public class WifiBroadcast extends BroadcastReceiver {
-    AdvancedWebView wb;
-    String url = "https://10.1.1.1:8090/httpclient.html";
     private Intent loginIntent;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
+
+
         WifiManager wf = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        if (wf.isWifiEnabled()){
+        if (wf.isWifiEnabled()  ){
+            //!netInfo.isConnectedOrConnecting()
+            //&& netInfo != null
             loginIntent = new Intent(context.getApplicationContext(),FirstActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(loginIntent);
@@ -37,7 +48,6 @@ public class WifiBroadcast extends BroadcastReceiver {
 
 
 
-        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         Toast.makeText(context, "WifiBroadCAst Triggered", Toast.LENGTH_LONG).show();
         if (wifi.isAvailable()) {
@@ -47,6 +57,7 @@ public class WifiBroadcast extends BroadcastReceiver {
         else {
             Toast.makeText(context, "Wifi not available", Toast.LENGTH_LONG).show();
         }
+
     }
 
     public String getWifiName(Context context) {
@@ -62,7 +73,6 @@ public class WifiBroadcast extends BroadcastReceiver {
         }
         return null;
     }
-
 
 
 
