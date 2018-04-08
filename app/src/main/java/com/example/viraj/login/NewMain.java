@@ -13,13 +13,15 @@ import android.widget.Toast;
 public class NewMain extends AppCompatActivity {
 
     TextView t;
+    int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_main);
     t = (TextView)findViewById(R.id.textView);
-
         checkFirstRun();
+
+
     }
 
      public void login(View view) {
@@ -58,20 +60,17 @@ public class NewMain extends AppCompatActivity {
         // Check for first run or upgrade
         if (currentVersionCode == savedVersionCode) {
 
-            Toast.makeText(getApplicationContext(),"This is a normal run",Toast.LENGTH_LONG).show();
             // TODO This is just a normal run
+            flag=0;
             return;
 
         } else if (savedVersionCode == DOESNT_EXIST) {
 
             // TODO This is a new install (or the user cleared the shared preferences)
-
-            Toast.makeText(getApplicationContext(),"This is a new install",Toast.LENGTH_LONG).show();
+            flag=1;
 
         } else if (currentVersionCode > savedVersionCode) {
-
-            Toast.makeText(getApplicationContext(),"This is an upgrade",Toast.LENGTH_LONG).show();
-
+            flag =1;
             // TODO This is an upgrade
         }
 
@@ -79,5 +78,7 @@ public class NewMain extends AppCompatActivity {
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
     }
 
+    //!netInfo.isConnectedOrConnecting()
+    //&& netInfo != null
 
 }

@@ -62,18 +62,4 @@ public class FirstActivity extends AppCompatActivity {
 
     }
 
-
-    public class MyWebClient extends WebViewClient {
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-
-            super.onPageFinished(view, url);
-        }
-    }
-
-
-
-
-
 }

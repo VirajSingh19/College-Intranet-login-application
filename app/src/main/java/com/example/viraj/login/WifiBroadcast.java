@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.SslError;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.util.Log;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -30,6 +34,9 @@ import im.delight.android.webview.AdvancedWebView;
 
 public class WifiBroadcast extends BroadcastReceiver {
     private Intent loginIntent;
+    AdvancedWebView wb;
+    String url = "https://10.1.1.1:8090/httpclient.html";
+    private Handler handler;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -38,13 +45,13 @@ public class WifiBroadcast extends BroadcastReceiver {
 
 
         WifiManager wf = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        if (wf.isWifiEnabled()  ){
-            //!netInfo.isConnectedOrConnecting()
-            //&& netInfo != null
+        if (wf.isWifiEnabled()){
+
             loginIntent = new Intent(context.getApplicationContext(),FirstActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(loginIntent);
-        }
+
+           }
 
 
 
@@ -58,7 +65,10 @@ public class WifiBroadcast extends BroadcastReceiver {
             Toast.makeText(context, "Wifi not available", Toast.LENGTH_LONG).show();
         }
 
-    }
+
+       }
+
+
 
     public String getWifiName(Context context) {
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
