@@ -1,8 +1,11 @@
 package com.example.viraj.login;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.SslErrorHandler;
@@ -16,7 +19,9 @@ import im.delight.android.webview.AdvancedWebView;
 public class FirstActivity extends AppCompatActivity {
 
     AdvancedWebView wb;
-    String url = "https://10.1.1.1:8090/httpclient.html";
+    String url="https://192.168.1.254:8090/httpclient.html";
+     String id="",pssd="";
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +32,8 @@ public class FirstActivity extends AppCompatActivity {
         wb.getSettings().setJavaScriptEnabled(true);
         wb.setMixedContentAllowed(true);
         wb.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-
-
-
+        id= getDefaults("id",this);
+        pssd =getDefaults("id",this);
         wb.loadUrl(url);
 
         wb.setWebViewClient(
@@ -44,7 +48,8 @@ public class FirstActivity extends AppCompatActivity {
                     wb.loadUrl("javascript:(function(){var s='2015bit1077'; var urn = document.getElementsByName('username');for (elt of urn){elt.value=s;}})()");
                     wb.loadUrl("javascript:(function(){var s='baja'; var pssd = document.getElementsByName('password');for (elt of pssd){elt.value=s;}})()");
                     wb.loadUrl("javascript:(function(){var btn= document.getElementsByClassName('button');for (elt of btn){elt.style['color']='green';elt.click();}})()");
-                    Toast.makeText(getApplicationContext(),"Successfully login",Toast.LENGTH_LONG).show();
+         //           Toast.makeText(getApplicationContext(),"Successfully login",Toast.LENGTH_SHORT).show();
+
                     finish();
                 }
             }
@@ -54,12 +59,22 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     private class MyWebViewClient extends WebViewClient {
-
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed();
         }
 
     }
+    public void setDefaults(String key, String value, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
 
+
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
 }

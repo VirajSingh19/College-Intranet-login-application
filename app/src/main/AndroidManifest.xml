@@ -28,7 +28,11 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".SharedPref"></activity>
 
+        <service
+            android:name=".TheService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

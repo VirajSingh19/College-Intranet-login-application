@@ -34,6 +34,7 @@ import im.delight.android.webview.AdvancedWebView;
 
 public class WifiBroadcast extends BroadcastReceiver {
     private Intent loginIntent;
+    private Intent service;
     AdvancedWebView wb;
     String url = "https://10.1.1.1:8090/httpclient.html";
     private Handler handler;
@@ -44,19 +45,23 @@ public class WifiBroadcast extends BroadcastReceiver {
         NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
 
 
+
+
         WifiManager wf = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         if (wf.isWifiEnabled()){
+
 
             loginIntent = new Intent(context.getApplicationContext(),FirstActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(loginIntent);
 
+            //Intent e = new Intent(context, TheService.class);
+            //context.startService(e);
            }
 
 
 
         final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        Toast.makeText(context, "WifiBroadCAst Triggered", Toast.LENGTH_LONG).show();
         if (wifi.isAvailable()) {
             String w = getWifiName(context);
             Toast.makeText(context, "Connected to :)"+w, Toast.LENGTH_LONG).show();
