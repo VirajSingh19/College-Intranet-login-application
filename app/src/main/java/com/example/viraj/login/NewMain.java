@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.http.SslError;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +19,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import im.delight.android.webview.AdvancedWebView;
 
@@ -46,11 +59,35 @@ public class NewMain extends AppCompatActivity {
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
+
     }
 
-    public void check(View view) {
+    private boolean isConnected(int timeOut) {
+        InetAddress inetAddress = null;
+        try {
+            Future<InetAddress> future = Executors.newSingleThreadExecutor().submit(new Callable<InetAddress>() {
+                @Override
+                public InetAddress call() {
+                    try {
+                        return InetAddress.getByName("google.com");
+                    } catch (UnknownHostException e) {
+                        return null;
+                    }
+                }
+            });
+            inetAddress = future.get(timeOut, TimeUnit.MILLISECONDS);
+            future.cancel(true);
+        } catch (InterruptedException e) {
+        } catch (ExecutionException e) {
+        } catch (TimeoutException e) {
+        }
+        return inetAddress!=null && !inetAddress.equals("");
+    }
+
+
+    public void check(View view) throws IOException, InterruptedException {
         String c = "";
-        if(isNetworkConnected())
+        if(isConnected(100))
             c= "Connected";
         else
             c= "Not Connected";
@@ -116,18 +153,27 @@ public class NewMain extends AppCompatActivity {
         return preferences.getString(key, null);
     }
 
-    public void logininbackground(View view) {
+    public void ssid(View view) {
+        String ssid = getWifiName(NewMain.this);
+        if(ssid.substring(0,5).equalsIgnoreCase("\"ABES"))
+            t.setText("equals");
+        else
+            t.setText("not equals");}
 
-
-    NewMain.this.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-//            Toast.makeText(getApplicationContext(),"Runs",Toast.LENGTH_LONG).show();
-
+    public String getWifiName(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (manager.isWifiEnabled()) {
+            WifiInfo wifiInfo = manager.getConnectionInfo();
+            if (wifiInfo != null) {
+                NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+                if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                    return wifiInfo.getSSID();
+                }
+            }
         }
-    });
-
+        return null;
     }
+
     private class MyWebViewClient extends WebViewClient {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {

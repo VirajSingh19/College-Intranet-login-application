@@ -50,21 +50,21 @@ public class WifiBroadcast extends BroadcastReceiver {
         WifiManager wf = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         if (wf.isWifiEnabled()){
 
-
+             /*
             loginIntent = new Intent(context.getApplicationContext(),FirstActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(loginIntent);
-
-            //Intent e = new Intent(context, TheService.class);
-            //context.startService(e);
+            */
+            Intent e = new Intent(context, TheService.class);
+            context.startService(e);
            }
 
 
 
         final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifi.isAvailable()) {
-            String w = getWifiName(context);
-            Toast.makeText(context, "Connected to :)"+w, Toast.LENGTH_LONG).show();
+        String ssid = getWifiName(context);
+        if (wifi.isAvailable() ) {
+      //      Toast.makeText(context, "Connected to :)"+ssid, Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(context, "Wifi not available", Toast.LENGTH_LONG).show();
