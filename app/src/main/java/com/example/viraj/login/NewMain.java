@@ -1,5 +1,6 @@
 package com.example.viraj.login;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,11 +13,13 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ import im.delight.android.webview.AdvancedWebView;
 
 public class NewMain extends AppCompatActivity {
 
+    RelativeLayout mListLayout;
     TextView t;
     int flag=0;
     AdvancedWebView wb;
@@ -136,6 +140,7 @@ public class NewMain extends AppCompatActivity {
     }
 
     public void settings(View view) {
+
         Intent e = new Intent(NewMain.this,SharedPref.class);
         startActivity(e);
     }
@@ -172,6 +177,12 @@ public class NewMain extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    public void attendance(View view) {
+
+    Intent e = new Intent(NewMain.this,Attendance.class);
+        startActivity(e);
     }
 
     private class MyWebViewClient extends WebViewClient {
