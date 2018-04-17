@@ -55,7 +55,7 @@ public class WifiBroadcast extends BroadcastReceiver {
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(loginIntent);
             */
-            Intent e = new Intent(context, TheService.class);
+            Intent e = new Intent(context,Service2.class);
             context.startService(e);
            }
 

@@ -3,6 +3,7 @@ package com.example.viraj.login;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -40,11 +41,21 @@ public class TheService extends Service {
             synchronized (this)
             {
                 try {
-                    if(isConnected(100)==false  && ssid.substring(0,5).equalsIgnoreCase("\"ABES")== true) {
-                        Intent i = new Intent();
-                        i.setClass(TheService.this, FirstActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
+
+                    if(isNetworkAvailable()==true) {
+
+                        if(isConnected(100)==false)
+                        {
+                            if(ssid.substring(0,5).equalsIgnoreCase("\"ABES")== true)
+                            {
+
+                                Intent i = new Intent();
+                                i.setClass(TheService.this, FirstActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+
+                            }
+                        }
                     }
                 wait(2000);
                 } catch (InterruptedException e) {
@@ -90,7 +101,12 @@ public class TheService extends Service {
             return null;
         }
 
-
+        private boolean isNetworkAvailable() {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
     }
 
 

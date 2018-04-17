@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -53,7 +54,7 @@ public class FirstActivity extends AppCompatActivity {
                     wb.loadUrl("javascript:(function(){var s='"+pssd+"'; var pssd = document.getElementsByName('password');for (elt of pssd){elt.value=s;}})()");
                     wb.loadUrl("javascript:(function(){var btn= document.getElementsByClassName('button');for (elt of btn){elt.style['color']='green';elt.click();}})()");
          //           Toast.makeText(getApplicationContext(),"Successfully login",Toast.LENGTH_SHORT).show();
-                    finish();
+                   finish();
                 }
             }
         });
@@ -61,6 +62,15 @@ public class FirstActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void finish() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            super.finishAndRemoveTask();
+        }
+        else {
+            super.finish();
+        }
+    }
     private class MyWebViewClient extends WebViewClient {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {

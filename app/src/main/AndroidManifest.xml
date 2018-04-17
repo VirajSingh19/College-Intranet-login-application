@@ -34,6 +34,13 @@
             android:name=".TheService"
             android:exported="false" />
 
+
+        <service android:name=".Service2"
+            android:exported="false"/>
+
+
+
+
         <activity android:name=".Attendance"></activity>
     </application>
 
